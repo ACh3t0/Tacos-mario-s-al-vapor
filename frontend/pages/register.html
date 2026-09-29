@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar usuario</title>
+    <link rel="stylesheet" href="register.css">
+    <script type="module" src="../servicios/register.service.js"></script>
+
+</head>
+<body>
+
+    <div class="cardContent">
+        <h1 class="return"><a href="../pages/login.html">X</a></h1>
+        <h1 class="title">Registrar usuario</h1>
+
+        <div class="formsCard">
+            <form>
+                <label class="userName">Nombre de ususario:</label>
+                <input type="text">
+
+                <label class="password">Contraseña:</label>
+                <input type="password">
+
+                <label class="accountType">Tipo de cuenta:</label>
+                <select class="foldingMenu">
+
+                    <option value="employee">Empleado</option>
+                    <option value="admin">Admin</option>
+                    <option value="master">Desarrollador</option>
+                </select>
+            </form>
+        </div>
+        <div class="buttonContainer">
+            <button class="register">Registrar</button>
+        </div>
+    </div>
+
+</body>
+</html>

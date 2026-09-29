@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tacos Mario´s</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="login.css">
+    <script type="module" src="../servicios/login.service.js"></script>
+
 </head>
 <body>
 
@@ -14,9 +16,10 @@
         <div class="formsCard">
 
 
-            <form>
+            <form id="loginForm">
+                
                 <label class="userName">Nombre de ususario:</label>
-                <input type="userName">
+                <input type="text">
 
                 <label class="password">Contraseña:</label>
                 <input type="password">
@@ -31,8 +34,8 @@
             </div>
         <div class="buttonContainer">
             </form>
-            <button class="loginBox">Iniciar <br>sesión</button>
-            <button class="register">Registrar <br>usuario</button>
+            <button type="submit" class="loginBox">Iniciar <br>sesión</button>
+            <button class="register"><a href="register.html">Registrar usuario</a></button>
         </div>
     </div>
 
