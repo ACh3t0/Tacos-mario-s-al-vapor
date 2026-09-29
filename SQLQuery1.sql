@@ -1,0 +1,1 @@
+insert into users ("userName", "password", "accountType") values ('AlanCheto', 'ChetuDMomo', 3)
