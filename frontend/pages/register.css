@@ -15,14 +15,29 @@ body{
     margin-top: 50px; 
 }
 
-.return{
-    margin: 10px;
+.title {
+    margin-top: 0px;
+    display: flex;
+    justify-content: center;
 }
+.return{
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 30px;
+    font-size: 30px;
+    margin-bottom: -20px;
+}
+
+a {
+    color: rgb(128, 5, 5);
+}
+
 .formsCard {
     height: 380px;
     font-size: 24px;
-    margin-top: 50px;
+    margin-top: 30px;
 }
+
 input {
     font-size: 30px;
     margin-top: 5px;
@@ -39,11 +54,7 @@ label {
     background-color: rgb(54, 173, 54);
     border-radius: 10px;
 }
-.title {
-    margin-top: 30px;
-    display: flex;
-    justify-content: center;
-}
+
 .accountType{
     margin-top: 20px;
 }
@@ -68,4 +79,3 @@ button {
     color: aliceblue;
     font-size: large;
 }
-
