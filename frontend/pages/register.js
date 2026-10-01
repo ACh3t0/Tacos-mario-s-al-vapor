@@ -1,18 +1,22 @@
-import { register } from "../servicios/register.service.js";
+﻿import { register } from "../services/register.service.js";
 
 const formulario = document.getElementById("registerForm");
-
+const boton = document.querySelector('button[form="registerForm"]');
 formulario.addEventListener("submit", async (event) => {
     event.preventDefault();
-
-    const usuario = document.getElementById("usuario").value.trim();
-    const password = document.getElementById("password").value;
-    const accountType = document.getElementById("accountType").value;
-
+    if (boton.disabled) return;
+    boton.disabled = true;
     try {
-        await register(usuario, password, accountType);
-        alert("Usuario registrado");
+        const resultado = await register(
+            document.getElementById("usuario").value.trim(),
+            document.getElementById("password").value,
+            Number(document.getElementById("accountType").value)
+        );
+        alert(resultado.mensaje);
+        window.location.href = "./login.html";
     } catch (error) {
         alert(error.message);
+    } finally {
+        boton.disabled = false;
     }
 });

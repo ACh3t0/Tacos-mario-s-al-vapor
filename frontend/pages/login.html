@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tacos Mario´s</title>
     <link rel="stylesheet" href="login.css">
-    <script type="module" src="../servicios/login.service.js"></script>
+    <script type="module" src="./login.js"></script>
 
 </head>
 <body>
@@ -19,10 +19,10 @@
             <form id="loginForm">
                 
                 <label class="userName">Nombre de ususario:</label>
-                <input type="text">
+                <input type="text" id="userName" required>
 
                 <label class="password">Contraseña:</label>
-                <input type="password">
+                <input type="password" id="password" required>
 
                 <label class="accountType">Tipo de cuenta:</label>
                 <select class="foldingMenu">
@@ -34,7 +34,7 @@
             </div>
         <div class="buttonContainer">
             </form>
-            <button type="submit" class="loginBox">Iniciar <br>sesión</button>
+            <button type="submit" form="loginForm" class="loginBox">Iniciar sesión</button>
             <button type="button" class="register" onclick="window.location.href = 'register.html'">Registrar usuario</button>
         </div>
     </div>

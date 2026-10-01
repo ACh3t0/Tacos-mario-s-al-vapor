@@ -1,40 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registrar usuario</title>
     <link rel="stylesheet" href="register.css">
-    <script type="module" src="../servicios/register.service.js"></script>
-
+    <script type="module" src="./register.js"></script>
 </head>
 <body>
-
     <div class="cardContent">
-        <h1 class="return"><a href="../pages/login.html">X</a></h1>
+        <h1 class="return"><a href="./login.html">X</a></h1>
         <h1 class="title">Registrar usuario</h1>
-
         <div class="formsCard">
             <form id="registerForm">
-                <label class="userName">Nombre de ususario:</label>
-                <input type="text">
-
-                <label class="password">Contraseña:</label>
-                <input type="password">
-
-                <label class="accountType">Tipo de cuenta:</label>
-                <select class="foldingMenu">
-
-                    <option value="employee">Empleado</option>
-                    <option value="admin">Admin</option>
-                    <option value="master">Desarrollador</option>
+                <label class="userName" for="usuario">Nombre de usuario:</label>
+                <input type="text" id="usuario" name="usuario" maxlength="50" autocomplete="username" required>
+                <label class="password" for="password">Contraseña:</label>
+                <input type="password" id="password" name="password" minlength="8" maxlength="128" autocomplete="new-password" required>
+                <p class="textPassword">Usa una contraseña de 8 a 128 caracteres.</p>
+                <label class="accountType" for="accountType">Tipo de cuenta:</label>
+                <select class="foldingMenu" id="accountType" name="accountType" required>
+                    <option value="1">Empleado</option>
+                    <option value="2">Admin</option>
+                    <option value="3">Desarrollador</option>
                 </select>
             </form>
         </div>
         <div class="buttonContainer">
-            <button class="register">Registrar</button>
+            <button type="submit" form="registerForm" class="register">Registrar</button>
         </div>
     </div>
-
 </body>
 </html>
