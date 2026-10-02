@@ -26,6 +26,26 @@ app.use(session({
     }
 }));
 
+// Páginas que se pueden abrir sin iniciar sesión.
+const archivosPublicos = [
+    "/pages/login.html", "/pages/login.css", "/pages/login.js",
+    "/pages/register.html", "/pages/register.css", "/pages/register.js"
+];
+
+app.use((req, res, next) => {
+    const ruta = req.path.toLowerCase();
+    if (!ruta.startsWith("/pages/") || archivosPublicos.includes(ruta)) return next();
+
+    const user = req.session?.user;
+    if (!user) return res.redirect("/pages/login.html");
+
+    // Solo Admin y Desarrollador pueden abrir la pantalla de usuarios.
+    if (ruta.startsWith("/pages/usuarios.") && ![ADMIN, DESARROLLADOR].includes(user.accountType)) {
+        return res.redirect("/pages/main.html");
+    }
+    next();
+});
+
 // Publica los archivos del frontend.
 app.use(express.static(path.join(__dirname, "../frontend")));
 
