@@ -11,16 +11,67 @@
         <img class="logo" src="../img/Logotipo de Tacos Mario’s al Vapor.png" alt="logo de empresa">
         <ul>
             <li><a href="./main.html">Inicio</a></li>
-            <li><a href="#">Inventario</a></li>
+            <li><a href="./inventario.html">Inventario</a></li>
             <li><a href="./usuarios.html" aria-current="page">Usuarios</a></li>
             <li><a href="./ventas.html">Ventas</a></li>
             <li><a href="./reportes.html">Reportes</a></li>
         </ul>
     </nav>
-    <main>
 
+    <main>
+        <header class="encabezado">
+            <h1>Usuarios</h1>
+            <div class="acciones">
+                <span id="sesion"></span>
+                <button id="btn-nuevo" type="button">Nuevo usuario</button>
+                <button id="btn-salir" type="button" class="secundario">Cerrar sesión</button>
+            </div>
+        </header>
+
+        <p id="mensaje" role="status" hidden></p>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Usuario</th>
+                        <th>Tipo de cuenta</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-usuarios"></tbody>
+            </table>
+        </div>
+
+        <dialog id="dialogo">
+            <form id="formulario">
+                <h2 id="titulo-dialogo">Nuevo usuario</h2>
+
+                <label for="usuario">Usuario</label>
+                <input id="usuario" type="text" maxlength="50" required autocomplete="off">
+
+                <label for="tipo">Tipo de cuenta</label>
+                <select id="tipo">
+                    <option value="1">Empleado</option>
+                    <option value="2">Admin</option>
+                    <option value="3" id="opcion-dev">Desarrollador</option>
+                </select>
+
+                <label for="password">Contraseña</label>
+                <input id="password" type="password" minlength="8" maxlength="128" autocomplete="new-password">
+                <small id="ayuda-password"></small>
+
+                <p id="error-form" class="error" role="alert"></p>
+
+                <div class="botones-form">
+                    <button type="submit">Guardar</button>
+                    <button type="button" id="btn-cancelar" class="secundario">Cancelar</button>
+                </div>
+            </form>
+        </dialog>
     </main>
 
+    <script type="module" src="./usuarios.js"></script>
 </body>
 </html>
-
