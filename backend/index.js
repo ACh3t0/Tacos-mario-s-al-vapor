@@ -30,6 +30,19 @@ app.use(session({
 app.use(express.static(path.join(__dirname, "../frontend")));
 
 app.post("/api/register", async (req, res) => {
+        // El registro público solo funciona si todavía no hay ningún usuario.
+    try {
+        const pool = await getConnection();
+        const total = await pool.request().query("SELECT COUNT(*) AS total FROM dbo.users");
+        if (total.recordset[0].total > 0) {
+            return res.status(403).json({
+                mensaje: "El registro está cerrado. Pide a un administrador que cree tu cuenta."
+            });
+        }
+    } catch (error) {
+        console.error("Error al revisar usuarios:", error.message);
+        return res.status(500).json({ mensaje: "No se pudo procesar el registro." });
+    }
     const { usuario, password, accountType } = req.body ?? {};
     if (![1, 2, 3].includes(accountType)) {
         return res.status(400).json({ mensaje: "Selecciona un tipo de cuenta válido: Empleado, Admin o Desarrollador." });
