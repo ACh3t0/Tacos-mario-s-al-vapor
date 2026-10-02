@@ -62,3 +62,133 @@ body {
     outline-offset: 3px;
 }
     
+body {
+    display: flex;
+}
+
+.sidebar {
+    flex-shrink: 0;
+}
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}
+
+.encabezado {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.encabezado h1 {
+    margin: 0;
+}
+
+.acciones {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+button {
+    padding: 8px 14px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    background-color: rgb(165, 128, 26);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button.secundario {
+    background-color: aliceblue;
+    color: #29220f;
+}
+
+button:hover {
+    filter: brightness(0.95);
+}
+
+.tabla-contenedor {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #ffe5a3;
+}
+
+td button {
+    margin-right: 6px;
+}
+
+tr.inactivo td {
+    color: #888;
+}
+
+#mensaje {
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+#mensaje.ok {
+    background-color: #e3f6e3;
+    color: #1d5e1d;
+}
+
+#mensaje.error, .error {
+    color: #a11;
+}
+
+#mensaje.error {
+    background-color: #fde4e4;
+}
+
+dialog {
+    width: min(420px, 92vw);
+    border: 1px solid #aaa;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+dialog::backdrop {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+#formulario {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+#formulario h2 {
+    margin: 0 0 8px;
+}
+
+#formulario input,
+#formulario select {
+    padding: 8px;
+    font-size: 16px;
+}
+
+.botones-form {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+}
