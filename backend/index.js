@@ -1,13 +1,34 @@
-﻿const express = require("express");
-const path = require("path");
-const { sql, getConnection } =
-    require("./servicios/databaseLogin.service");
-
-const app = express();
+﻿const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, ".env") });
+const express = require("express");
+const session = require("express-session");
+const { sql, getConnection } = require("./servicios/databaseLogin.service");
 const { registerUser } = require("./servicios/register.service");
 const { verifyPassword } = require("./servicios/password.service");
+const { requireLogin } = require("./middleware/auth");
 
-app.post("/api/register", express.json(), async (req, res) => {
+const app = express();
+
+// Permite recibir el JSON enviado por fetch.
+app.use(express.json());
+
+// Sesiones: el servidor recuerda quién inició sesión.
+app.use(session({
+    name: "tacos.sid",
+    secret: process.env.SESSION_SECRET || "cambia-esto-en-produccion",
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        sameSite: "lax",
+        maxAge: 1000 * 60 * 60 * 8 // 8 horas
+    }
+}));
+
+// Publica los archivos del frontend.
+app.use(express.static(path.join(__dirname, "../frontend")));
+
+app.post("/api/register", async (req, res) => {
     const { usuario, password, accountType } = req.body ?? {};
     if (![1, 2, 3].includes(accountType)) {
         return res.status(400).json({ mensaje: "Selecciona un tipo de cuenta válido: Empleado, Admin o Desarrollador." });
@@ -28,12 +49,6 @@ app.post("/api/register", express.json(), async (req, res) => {
     }
 });
 
-// Permite recibir el JSON enviado por fetch.
-app.use(express.json());
-
-// Publica los archivos del frontend.
-app.use(express.static(path.join(__dirname, "../frontend")));
-
 app.post("/api/login", async (req, res) => {
     const { usuario, password } = req.body ?? {};
 
@@ -43,49 +58,63 @@ app.post("/api/login", async (req, res) => {
         !usuario.trim() ||
         !password
     ) {
-        return res.status(400).json({
-            mensaje: "Escribe tu usuario y contraseña."
-        });
+        return res.status(400).json({ mensaje: "Escribe tu usuario y contraseña." });
     }
 
     try {
         const conexion = await getConnection();
 
-        // El parámetro evita insertar directamente el texto en el SQL.
         const resultado = await conexion.request()
             .input("usuario", sql.NVarChar, usuario.trim())
             .query(`
-                SELECT TOP (1) [userName], [password], [accountType]
+                SELECT TOP (1) [userId], [userName], [password], [accountType], [isActive]
                 FROM [users]
                 WHERE [userName] = @usuario
             `);
 
         const cuenta = resultado.recordset[0];
 
-        // Verifica hashes nuevos y mantiene compatibilidad con las cuentas anteriores.
-        if (!cuenta || !(await verifyPassword(password, cuenta.password))) {
-            return res.status(401).json({
-                mensaje: "Usuario o contraseña incorrectos."
-            });
+        // Mismo mensaje si el usuario no existe, la contraseña es mala o la cuenta está desactivada.
+        if (!cuenta || !(await verifyPassword(password, cuenta.password)) || !cuenta.isActive) {
+            return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos." });
         }
 
-        // Nunca devolver la contraseña al navegador.
-        return res.json({
-            mensaje: "Credenciales correctas.",
-            usuario: cuenta.userName,
-            tipoCuenta: cuenta.accountType
+        // regenerate crea una sesión nueva al iniciar sesión (más seguro).
+        req.session.regenerate((err) => {
+            if (err) {
+                console.error("Error al crear la sesión:", err.message);
+                return res.status(500).json({ mensaje: "No se pudo iniciar la sesión." });
+            }
+            req.session.user = {
+                userId: cuenta.userId,
+                userName: cuenta.userName,
+                accountType: cuenta.accountType
+            };
+            return res.json({
+                mensaje: "Credenciales correctas.",
+                usuario: cuenta.userName,
+                tipoCuenta: cuenta.accountType
+            });
         });
     } catch (error) {
         console.error("Error en login:", error.message);
-
-        return res.status(500).json({
-            mensaje: "No se pudo procesar el inicio de sesión."
-        });
+        return res.status(500).json({ mensaje: "No se pudo procesar el inicio de sesión." });
     }
+});
+
+// Dice quién tiene la sesión abierta (lo usará el frontend).
+app.get("/api/me", requireLogin, (req, res) => {
+    res.json(req.session.user);
+});
+
+app.post("/api/logout", (req, res) => {
+    req.session.destroy(() => {
+        res.clearCookie("tacos.sid");
+        res.json({ mensaje: "Sesión cerrada." });
+    });
 });
 
 if (require.main === module) app.listen(3000, "127.0.0.1", () => {
     console.log("Abre http://localhost:3000/pages/login.html");
 });
 module.exports = app;
-
