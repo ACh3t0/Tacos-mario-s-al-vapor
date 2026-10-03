@@ -264,6 +264,8 @@ app.patch("/api/usuarios/:id/estado", soloAdmins, async (req, res) => {
     }
 });
 
+app.use("/api", require("./rutas/comercial"));
+
 if (require.main === module) app.listen(3000, "127.0.0.1", () => {
     console.log("Abre http://localhost:3000/pages/login.html");
 });

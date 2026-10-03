@@ -1,18 +1,9 @@
-async function pedir(url, opciones = {}) {
-    const respuesta = await fetch(url, {
-        headers: { "Content-Type": "application/json" },
-        ...opciones
-    });
-    const datos = await respuesta.json().catch(() => ({}));
-    if (!respuesta.ok) {
-        const error = new Error(datos.mensaje || "Ocurrió un error.");
-        error.status = respuesta.status;
-        throw error;
-    }
-    return datos;
-}
+import { pedir } from "./api.service.js";
 
 export const obtenerSesion = () => pedir("/api/me");
+
+// El backend consulta dbo.users en SQL Server. Requiere Admin o Desarrollador.
+// Devuelve [{ userId, userName, accountType, isActive }], sin contraseñas.
 export const listarUsuarios = () => pedir("/api/usuarios");
 
 export const crearUsuario = (usuario, password, accountType) =>

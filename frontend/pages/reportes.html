@@ -5,28 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reportes | Tacos Mario´s</title>
     <link rel="stylesheet" href="./reportes.css">
+    <script type="module" src="./reportes.js"></script>
 </head>
-
-    <script type="module">
-        import { protegerPagina } from "../services/sesion.js";
-        protegerPagina();
-    </script>
-    
 <body>
-    <nav class="sidebar">
+    <nav class="sidebar" aria-label="Menú principal">
         <img class="logo" src="../img/Logotipo de Tacos Mario’s al Vapor.png" alt="logo de empresa">
         <ul>
             <li><a href="./main.html">Inicio</a></li>
-            <li><a href="#">Inventario</a></li>
+            <li><a href="./inventario.html">Inventario</a></li>
             <li><a href="./usuarios.html">Usuarios</a></li>
             <li><a href="./ventas.html">Ventas</a></li>
             <li><a href="./reportes.html" aria-current="page">Reportes</a></li>
         </ul>
     </nav>
     <main>
-
+        <header class="encabezado">
+            <div><h1>Reportes de ventas</h1></div>
+            <div class="exportar"><button type="button" disabled aria-describedby="pdf-nota">Descargar PDF</button><small id="pdf-nota">Próximamente</small></div>
+        </header>
+        <form id="filtros" class="filtros">
+            <label>Desde<input id="desde" type="date"></label>
+            <label>Hasta<input id="hasta" type="date"></label>
+            <button id="aplicar" type="submit" disabled>Aplicar fechas</button>
+            <button id="actualizar" type="button">Actualizar</button>
+            <small>Sin fechas se muestra todo el historial.</small>
+        </form>
+        <p id="estado" role="status" aria-live="polite">Cargando ventas…</p>
+        <div id="resultados" hidden>
+            <section class="indicadores" aria-label="Resumen del período">
+                <article class="tarjeta destacado"><h2>Ingresos totales</h2><strong id="ingresos">—</strong><p>Total vendido, antes de descontar costos.</p></article>
+                <article class="tarjeta"><h2>Ventas realizadas</h2><strong id="cantidad-ventas">—</strong><p>Operaciones registradas en el período.</p></article>
+                <article class="tarjeta"><h2>Promedio por venta</h2><strong id="promedio">—</strong><p>Ingresos divididos entre el número de ventas.</p></article>
+            </section>
+            <section class="graficos" aria-label="Gráficos de ventas">
+                <article class="tarjeta"><h2>Ingresos por día</h2><p>Importe vendido en cada día con actividad.</p><div id="barras" class="barras" aria-label="Ingresos diarios"></div></article>
+                <article class="tarjeta"><h2>Productos más vendidos</h2><label class="selector-unidad">Comparar cantidades en <select id="unidad" aria-label="Unidad de medida"></select></label><p id="lider"></p><div class="distribucion"><div id="pastel" class="pastel" role="img" aria-label="Sin productos vendidos"></div><ul id="leyenda" class="leyenda"></ul></div><small>Porcentaje de la cantidad vendida en la unidad seleccionada.</small></article>
+            </section>
+            <section class="tarjeta historial"><h2>Detalle de ventas</h2><p>Abre los productos de cada venta para consultar cantidades y precios.</p><div class="tabla-scroll"><table><caption class="sr-only">Ventas del período seleccionado</caption><thead><tr><th scope="col">Venta</th><th scope="col">Fecha y hora</th><th scope="col">Vendedor</th><th scope="col">Pago</th><th scope="col">Productos</th><th scope="col">Total</th></tr></thead><tbody id="historial"></tbody></table></div></section>
+        </div>
     </main>
-
 </body>
 </html>
-
