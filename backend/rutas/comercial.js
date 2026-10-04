@@ -25,6 +25,8 @@ router.post("/inventario", requireRole(ADMIN, DESARROLLADOR), responder(req => i
 router.put("/inventario/:id", requireRole(ADMIN, DESARROLLADOR), responder(req => inventario.editarProducto(Number(req.params.id), req.body)));
 router.get("/ventas", responder(() => ventas.listarVentas()));
 router.get("/ventas/:id", responder(req => ventas.obtenerVenta(Number(req.params.id))));
-router.post("/ventas", responder(req => ventas.registrarVenta(req.session.user.userId, req.body), 201));
-
+router.post("/ventas", responder(req => {
+    const uId = req.session?.user?.userId ?? req.session?.user?.id ?? req.session?.userId ?? 1;
+    return ventas.registrarVenta(uId, req.body);
+}, 201));
 module.exports = router;
