@@ -5,23 +5,24 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    display: flex;
+    background-color: #f4f6f8;
 }
 
+/* Menú lateral izquierdo */
 .sidebar {
     background-color: rgb(165, 128, 26);
-    width: 200px;
-    max-width: 100%;
+    width: 220px;
+    min-width: 220px;
     min-height: 100vh;
     padding: 20px 16px;
 }
 
 .logo {
     display: block;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
     width: 100px;
-    max-width: 100%;
-    height: 50px;
-    object-fit: contain;
+    height: auto;
 }
 
 .sidebar ul {
@@ -29,36 +30,118 @@ body {
     flex-direction: column;
     gap: 12px;
     list-style: none;
-    margin: 30px 0 0;
+    margin: 0;
     padding: 0;
-}
-
-.sidebar li {
-    width: 100%;
 }
 
 .sidebar a {
     display: block;
     width: 100%;
-    padding: 16px 12px;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    padding: 12px;
     border-radius: 8px;
     background-color: aliceblue;
     color: #29220f;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     text-align: center;
     text-decoration: none;
-    overflow-wrap: anywhere;
-    transition: background-color 150ms ease;
 }
 
 .sidebar a:hover {
     background-color: #ffe5a3;
 }
 
-.sidebar a:focus-visible {
-    outline: 3px solid #29220f;
-    outline-offset: 3px;
+/* Área de contenido de ventas */
+main {
+    flex: 1;
+    padding: 30px;
+    background-color: #ffffff;
+    min-height: 100vh;
 }
-    
+
+h1 {
+    margin-top: 0;
+    color: #333333;
+}
+
+.contenedor-venta {
+    display: flex;
+    gap: 30px;
+    margin-top: 20px;
+}
+
+.panel-agregar, .panel-orden {
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.panel-agregar {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.panel-orden {
+    flex: 2;
+}
+
+select, input[type="number"], button {
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    width: 100%;
+}
+
+button {
+    cursor: pointer;
+    background-color: #d35400;
+    color: white;
+    border: none;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #b94600;
+}
+
+#tabla-orden {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#tabla-orden th, #tabla-orden td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#tabla-orden th {
+    background-color: #f0f0f0;
+}
+
+.resumen-cobro {
+    margin-top: 25px;
+    text-align: right;
+}
+
+.resumen-cobro h4 {
+    font-size: 20px;
+    margin-bottom: 15px;
+}
+
+.resumen-cobro select {
+    width: auto;
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.resumen-cobro button {
+    width: auto;
+    padding: 10px 24px;
+}
