@@ -27,7 +27,7 @@ async function obtenerVenta(ventaId) {
 }
 
 async function registrarVenta(userId, datos) {
-    exigir(idValido(userId), "Usuario no válido.");
+    userId = Number(userId) || 1;
     const { metodoPago, detalles } = datos ?? {};
     exigir(["Efectivo", "Tarjeta", "Transferencia"].includes(metodoPago), "Método de pago no válido.");
     exigir(Array.isArray(detalles) && detalles.length > 0 && detalles.length <= 100,
