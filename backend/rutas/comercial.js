@@ -18,7 +18,7 @@ function responder(operacion, status = 200) {
 }
 
 router.use(requireLogin);
-router.get("/reportes", responder(() => require("../servicios/reportes.service").obtenerReporte()));
+router.get("/reportes", requireRole(ADMIN, DESARROLLADOR), responder(() => require("../servicios/reportes.service").obtenerReporte()));
 router.get("/inventario", responder(() => inventario.listarInventario()));
 router.get("/inventario/:id", responder(req => inventario.obtenerProducto(Number(req.params.id))));
 router.post("/inventario", requireRole(ADMIN, DESARROLLADOR), responder(req => inventario.crearProducto(req.body), 201));
