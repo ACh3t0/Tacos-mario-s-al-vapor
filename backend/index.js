@@ -39,8 +39,9 @@ app.use((req, res, next) => {
     const user = req.session?.user;
     if (!user) return res.redirect("/pages/login.html");
 
-    // Solo Admin y Desarrollador pueden abrir la pantalla de usuarios.
-    if (ruta.startsWith("/pages/usuarios.") && ![ADMIN, DESARROLLADOR].includes(user.accountType)) {
+    // Solo Admin y Desarrollador pueden abrir Usuarios y Reportes.
+    const paginasDeAdmin = ["/pages/usuarios.", "/pages/reportes."];
+    if (paginasDeAdmin.some((p) => ruta.startsWith(p)) && ![ADMIN, DESARROLLADOR].includes(user.accountType)) {
         return res.redirect("/pages/main.html");
     }
     next();
