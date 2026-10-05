@@ -18,22 +18,28 @@ async function cargarInventario() {
         
         console.log("Productos recibidos de la API:", productos);
 
-        // Guardamos los productos convirtiendo tipos para evitar problemas
+        // Guardamos los productos convirtiendo tipos para evitar problemas.
         inventarioDisponible = productos.map(p => ({
             productoId: Number(p.productoId ?? p.id ?? p.id_producto),
             nombre: p.nombre,
             precioVenta: Number(p.precioVenta ?? p.precio ?? 0),
             existencia: Number(p.existencia ?? 0),
             isActive: (p.isActive === true || p.isActive === 1 || p.isActive === '1')
-        })).filter(p => p.existencia > 0);
+        })).filter(p => p.isActive);
 
         selectProducto.innerHTML = '<option value="">-- Selecciona un producto --</option>';
         inventarioDisponible.forEach(prod => {
             const opcion = document.createElement("option");
             opcion.value = prod.productoId;
-            opcion.textContent = `${prod.nombre} - $${prod.precioVenta.toFixed(2)} (Stock: ${prod.existencia})`;
+            opcion.textContent = prod.existencia > 0
+                ? `${prod.nombre} - $${prod.precioVenta.toFixed(2)} (Stock: ${prod.existencia})`
+                : `${prod.nombre} - $${prod.precioVenta.toFixed(2)} (Sin existencias)`;
+            opcion.disabled = prod.existencia <= 0;
             selectProducto.appendChild(opcion);
         });
+        if (inventarioDisponible.length === 0) {
+            selectProducto.innerHTML = '<option value="">No hay productos activos</option>';
+        }
     } catch (error) {
         console.error("Error al cargar inventario:", error);
         selectProducto.innerHTML = '<option value="">Error al cargar productos</option>';
@@ -97,25 +103,32 @@ function actualizarTabla() {
         total += subtotal;
 
         const fila = document.createElement("tr");
-        fila.innerHTML = `
-            <td>${item.nombre}</td>
-            <td>$${item.precioUnitario.toFixed(2)}</td>
-            <td>${item.cantidad}</td>
-            <td>$${subtotal.toFixed(2)}</td>
-            <td><button type="button" class="btn-eliminar" data-index="${index}" style="background-color: #c0392b; padding: 4px 8px;">Quitar</button></td>
-        `;
+        for (const texto of [
+            item.nombre,
+            `$${item.precioUnitario.toFixed(2)}`,
+            item.cantidad,
+            `$${subtotal.toFixed(2)}`
+        ]) {
+            const celda = document.createElement("td");
+            celda.textContent = texto;
+            fila.appendChild(celda);
+        }
+        const celdaAccion = document.createElement("td");
+        const botonEliminar = document.createElement("button");
+        botonEliminar.type = "button";
+        botonEliminar.className = "btn-eliminar";
+        botonEliminar.textContent = "Quitar";
+        botonEliminar.style.cssText = "background-color: #c0392b; padding: 4px 8px;";
+        botonEliminar.addEventListener("click", () => {
+            ordenActual.splice(index, 1);
+            actualizarTabla();
+        });
+        celdaAccion.appendChild(botonEliminar);
+        fila.appendChild(celdaAccion);
         listaOrden.appendChild(fila);
     });
 
     totalVenta.textContent = total.toFixed(2);
-
-    document.querySelectorAll(".btn-eliminar").forEach(boton => {
-        boton.addEventListener("click", (e) => {
-            const idx = parseInt(e.target.dataset.index);
-            ordenActual.splice(idx, 1);
-            actualizarTabla();
-        });
-    });
 }
 
 // Enviar venta al backend

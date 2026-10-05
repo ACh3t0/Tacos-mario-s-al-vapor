@@ -7,11 +7,6 @@
     <link rel="stylesheet" href="./main.css">
 </head>
 
-<script type="module">
-        import { protegerPagina } from "../services/sesion.js";
-        protegerPagina();
-    </script>
-    
 <body>
     <nav class="sidebar">
         <img class="logo" src="../img/Logotipo de Tacos Mario’s al Vapor.png" alt="logo de empresa">
@@ -24,9 +19,52 @@
         </ul>
     </nav>
     <main>
+        <header class="encabezado">
+            <h1>Pedidos</h1>
+            <button id="actualizar-pedidos" type="button">Actualizar</button>
+        </header>
+        <p id="mensaje-pedidos" role="status" aria-live="polite">Cargando pedidos...</p>
 
+        <section class="seccion-pedidos" aria-labelledby="titulo-activos">
+            <h2 id="titulo-activos">Pedidos activos</h2>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Fecha</th>
+                            <th>Registró</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Pago</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-activos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="seccion-pedidos" aria-labelledby="titulo-completados">
+            <h2 id="titulo-completados">Pedidos completados</h2>
+            <div class="tabla-contenedor">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pedido</th>
+                            <th>Fecha</th>
+                            <th>Registró</th>
+                            <th>Productos</th>
+                            <th>Total</th>
+                            <th>Pago</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pedidos-completados"></tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
+    <script type="module" src="./main.js"></script>
 </body>
 </html>
-

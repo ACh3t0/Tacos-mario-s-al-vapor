@@ -9,3 +9,6 @@ export const crearProducto = producto => pedir("/api/inventario", {
 export const editarProducto = (id, producto) => pedir(`/api/inventario/${encodeURIComponent(id)}`, {
     method: "PUT", body: JSON.stringify(producto)
 });
+export const agregarExistencia = (id, cantidad) => pedir(`/api/inventario/${encodeURIComponent(id)}/existencia`, {
+    method: "PATCH", body: JSON.stringify({ cantidad })
+});

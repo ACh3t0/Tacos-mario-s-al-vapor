@@ -58,8 +58,27 @@ async function guardarProducto(datos, productoId = null) {
     return resultado.recordset[0];
 }
 
+async function agregarExistencia(productoId, cantidad) {
+    exigir(idValido(productoId), "Producto no válido.");
+    exigir(decimalValido(cantidad, 3) && cantidad > 0,
+        "La cantidad a agregar debe ser un número positivo de hasta 3 decimales.");
+    const pool = await getConnection();
+    const resultado = await pool.request()
+        .input("productoId", sql.Int, productoId)
+        .input("cantidad", sql.Decimal(12, 3), cantidad)
+        .query(`
+            UPDATE dbo.inventario
+            SET existencia = existencia + @cantidad
+            OUTPUT INSERTED.*
+            WHERE productoId = @productoId
+        `);
+    exigir(resultado.recordset.length, "Producto no encontrado.", 404);
+    return resultado.recordset[0];
+}
+
 module.exports = {
     listarInventario, obtenerProducto,
     crearProducto: datos => guardarProducto(datos),
-    editarProducto: (id, datos) => guardarProducto(datos, id)
+    editarProducto: (id, datos) => guardarProducto(datos, id),
+    agregarExistencia
 };

@@ -18,11 +18,16 @@ function responder(operacion, status = 200) {
 }
 
 router.use(requireLogin);
-router.get("/reportes", requireRole(ADMIN, DESARROLLADOR), responder(() => require("../servicios/reportes.service").obtenerReporte()));
+router.get("/reportes", responder(() => require("../servicios/reportes.service").obtenerReporte()));
 router.get("/inventario", responder(() => inventario.listarInventario()));
 router.get("/inventario/:id", responder(req => inventario.obtenerProducto(Number(req.params.id))));
 router.post("/inventario", requireRole(ADMIN, DESARROLLADOR), responder(req => inventario.crearProducto(req.body), 201));
 router.put("/inventario/:id", requireRole(ADMIN, DESARROLLADOR), responder(req => inventario.editarProducto(Number(req.params.id), req.body)));
+router.patch("/inventario/:id/existencia", requireRole(ADMIN, DESARROLLADOR), responder(req =>
+    inventario.agregarExistencia(Number(req.params.id), req.body?.cantidad)
+));
+router.get("/pedidos", responder(req => ventas.listarPedidos(req.query.estado)));
+router.patch("/pedidos/:id/completar", responder(req => ventas.completarPedido(Number(req.params.id))));
 router.get("/ventas", responder(() => ventas.listarVentas()));
 router.get("/ventas/:id", responder(req => ventas.obtenerVenta(Number(req.params.id))));
 router.post("/ventas", responder(req => {

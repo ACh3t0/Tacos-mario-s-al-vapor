@@ -7,25 +7,41 @@
     <link rel="stylesheet" href="./inventario.css">
 </head>
 
-    <script type="module">
-        import { protegerPagina } from "../services/sesion.js";
-        protegerPagina();
-    </script>
-    
 <body>
     <nav class="sidebar">
         <img class="logo" src="../img/Logotipo de Tacos Mario’s al Vapor.png" alt="logo de empresa">
         <ul>
             <li><a href="./main.html">Inicio</a></li>
-            <li><a href="#">Inventario</a></li>
+            <li><a href="./inventario.html" aria-current="page">Inventario</a></li>
             <li><a href="./usuarios.html">Usuarios</a></li>
             <li><a href="./ventas.html">Ventas</a></li>
             <li><a href="./reportes.html">Reportes</a></li>
         </ul>
     </nav>
     <main>
-        
+        <header class="encabezado">
+            <h1>Inventario</h1>
+        </header>
+
+        <p id="mensaje" role="status" aria-live="polite" hidden></p>
+        <p id="ayuda-inventario"></p>
+
+        <div class="tabla-contenedor">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio de venta</th>
+                        <th>Existencia actual</th>
+                        <th>Estado</th>
+                        <th>Agregar existencia</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-inventario"></tbody>
+            </table>
+        </div>
     </main>
 
+    <script type="module" src="./inventario.js"></script>
 </body>
 </html>

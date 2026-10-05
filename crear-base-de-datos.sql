@@ -41,6 +41,35 @@ BEGIN
 END
 GO
 
+-- Agrega el catálogo inicial sin modificar productos que ya existan.
+DECLARE @catalogo TABLE (
+    nombre nvarchar(100) NOT NULL,
+    precioVenta decimal(12,2) NOT NULL
+);
+
+INSERT INTO @catalogo (nombre, precioVenta)
+VALUES
+    (N'Taco de papa', 11.00),
+    (N'Taco de Deshebrada', 11.00),
+    (N'Taco de Chicharron', 11.00),
+    (N'Taco de Frijol', 11.00),
+    (N'Orden mixta (5 tacos)', 55.00),
+    (N'Joya de manzana (355 ml)', 20.00),
+    (N'Joya de ponche (355 ml)', 20.00),
+    (N'Joya de durazno (355 ml)', 20.00),
+    (N'Coca-cola regular (355 ml)', 20.00),
+    (N'Coca-cola zero (355 ml)', 20.00);
+
+INSERT INTO dbo.inventario (nombre, unidad, existencia, stockMinimo, precioVenta, isActive)
+SELECT catalogo.nombre, N'pieza', 0, 0, catalogo.precioVenta, 1
+FROM @catalogo AS catalogo
+WHERE NOT EXISTS (
+    SELECT 1
+    FROM dbo.inventario AS existente
+    WHERE existente.nombre = catalogo.nombre
+);
+GO
+
 -- Encabezado: fecha, usuario responsable y forma de pago.
 IF OBJECT_ID(N'dbo.ventas', N'U') IS NULL
 BEGIN
@@ -49,9 +78,49 @@ BEGIN
         fecha datetime2(0) NOT NULL CONSTRAINT DF_ventas_fecha DEFAULT SYSDATETIME(),
         userId int NOT NULL,
         metodoPago nvarchar(20) NOT NULL,
+        estadoPedido nvarchar(12) NOT NULL CONSTRAINT DF_ventas_estadoPedido DEFAULT N'Activo',
         CONSTRAINT FK_ventas_users FOREIGN KEY (userId) REFERENCES dbo.users(userId),
-        CONSTRAINT CK_ventas_metodoPago CHECK (metodoPago IN (N'Efectivo', N'Tarjeta', N'Transferencia'))
+        CONSTRAINT CK_ventas_metodoPago CHECK (metodoPago IN (N'Efectivo', N'Tarjeta', N'Transferencia')),
+        CONSTRAINT CK_ventas_estadoPedido CHECK (estadoPedido IN (N'Activo', N'Completado'))
     );
+END
+GO
+
+-- Conserva las ventas existentes como completadas.
+IF COL_LENGTH(N'dbo.ventas', N'estadoPedido') IS NULL
+BEGIN
+    ALTER TABLE dbo.ventas
+    ADD estadoPedido nvarchar(12) NOT NULL
+        CONSTRAINT DF_ventas_estadoPedido DEFAULT N'Completado' WITH VALUES;
+END
+GO
+
+-- El DEFAULT se separa en otro lote para que SQL Server ya conozca la columna.
+DECLARE @defaultEstadoPedido sysname;
+SELECT @defaultEstadoPedido = dc.name
+FROM sys.default_constraints AS dc
+WHERE dc.parent_object_id = OBJECT_ID(N'dbo.ventas')
+    AND dc.parent_column_id = COLUMNPROPERTY(OBJECT_ID(N'dbo.ventas'), N'estadoPedido', 'ColumnId');
+
+IF @defaultEstadoPedido IS NOT NULL
+BEGIN
+    DECLARE @sqlEliminarDefault nvarchar(max) =
+        N'ALTER TABLE dbo.ventas DROP CONSTRAINT ' + QUOTENAME(@defaultEstadoPedido);
+    EXEC sys.sp_executesql @sqlEliminarDefault;
+END
+GO
+
+DECLARE @sqlAgregarDefault nvarchar(max) =
+    N'ALTER TABLE [dbo].[ventas] ADD CONSTRAINT [DF_ventas_estadoPedido] ' +
+    N'DEFAULT N''Activo'' FOR [estadoPedido]';
+EXEC sys.sp_executesql @sqlAgregarDefault;
+GO
+
+IF OBJECT_ID(N'dbo.CK_ventas_estadoPedido', N'C') IS NULL
+BEGIN
+    ALTER TABLE dbo.ventas
+    ADD CONSTRAINT CK_ventas_estadoPedido
+        CHECK (estadoPedido IN (N'Activo', N'Completado'));
 END
 GO
 
@@ -71,9 +140,25 @@ BEGIN
         CONSTRAINT CK_detalleVenta_precioUnitario CHECK (precioUnitario >= 0)
     );
 
-    CREATE INDEX IX_detalleVenta_ventaId ON dbo.detalleVenta(ventaId);
-    CREATE INDEX IX_detalleVenta_productoId ON dbo.detalleVenta(productoId);
 END
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes
+    WHERE object_id = OBJECT_ID(N'dbo.detalleVenta')
+        AND name = N'IX_detalleVenta_ventaId'
+)
+    EXEC sys.sp_executesql
+        N'CREATE INDEX [IX_detalleVenta_ventaId] ON [dbo].[detalleVenta] ([ventaId])';
+GO
+
+IF NOT EXISTS (
+    SELECT 1 FROM sys.indexes
+    WHERE object_id = OBJECT_ID(N'dbo.detalleVenta')
+        AND name = N'IX_detalleVenta_productoId'
+)
+    EXEC sys.sp_executesql
+        N'CREATE INDEX [IX_detalleVenta_productoId] ON [dbo].[detalleVenta] ([productoId])';
 GO
 
 -- El total de una venta se obtiene con SUM(subtotal) de su detalleVenta.

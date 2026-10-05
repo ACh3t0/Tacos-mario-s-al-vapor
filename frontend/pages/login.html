@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tacos Mario´s</title>
     <link rel="stylesheet" href="login.css">
     <script type="module" src="./login.js"></script>
+
 </head>
 <body>
 
@@ -13,16 +14,26 @@
         <h1 class="title">Tacos Mario´s</h1>
 
         <div class="formsCard">
+
+
             <form id="loginForm">
-                <label class="userName" for="userName">Nombre de usuario:</label>
+                
+                <label class="userName">Nombre de ususario:</label>
                 <input type="text" id="userName" required>
 
-                <label class="password" for="password">Contraseña:</label>
+                <label class="password">Contraseña:</label>
                 <input type="password" id="password" required>
-            </form>
-        </div>
 
+                <label class="accountType">Tipo de cuenta:</label>
+                <select class="foldingMenu">
+
+                    <option value="employee">Empleado</option>
+                    <option value="admin">Admin</option>
+                    <option value="master">Desarrollador</option>
+                </select>
+            </div>
         <div class="buttonContainer">
+            </form>
             <button type="submit" form="loginForm" class="loginBox">Iniciar sesión</button>
             <button type="button" class="register" onclick="window.location.href = 'register.html'">Registrar usuario</button>
         </div>

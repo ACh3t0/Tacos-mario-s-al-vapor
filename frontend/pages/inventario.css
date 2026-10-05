@@ -5,12 +5,14 @@
 body {
     margin: 0;
     font-family: Arial, sans-serif;
+    display: flex;
 }
 
 .sidebar {
     background-color: rgb(165, 128, 26);
     width: 200px;
     max-width: 100%;
+    flex-shrink: 0;
     min-height: 100vh;
     padding: 20px 16px;
 }
@@ -61,4 +63,108 @@ body {
     outline: 3px solid #29220f;
     outline-offset: 3px;
 }
-    
+
+main {
+    flex: 1;
+    min-width: 0;
+    padding: 24px;
+}
+
+.encabezado {
+    margin-bottom: 16px;
+}
+
+.encabezado h1 {
+    margin: 0;
+}
+
+.tabla-contenedor {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #ffe5a3;
+}
+
+.acciones-stock {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 230px;
+}
+
+.acciones-stock input {
+    width: 100px;
+    min-width: 0;
+    padding: 8px;
+}
+
+button {
+    padding: 8px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 6px;
+    background-color: rgb(165, 128, 26);
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.65;
+}
+
+#mensaje {
+    padding: 10px 12px;
+    border-radius: 6px;
+}
+
+#mensaje.ok {
+    background-color: #e3f6e3;
+    color: #1d5e1d;
+}
+
+#mensaje.error {
+    background-color: #fde4e4;
+    color: #a11;
+}
+
+tr.inactivo td {
+    color: #888;
+}
+
+@media (max-width: 720px) {
+    body {
+        display: block;
+    }
+
+    .sidebar {
+        width: 100%;
+        min-height: auto;
+    }
+
+    .sidebar ul {
+        flex-direction: row;
+        flex-wrap: wrap;
+        margin-top: 20px;
+    }
+
+    .sidebar li {
+        flex: 1 1 130px;
+    }
+
+    main {
+        padding: 16px;
+    }
+}
