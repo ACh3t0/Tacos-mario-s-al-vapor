@@ -42,6 +42,12 @@ END
 GO
 
 -- Agrega el catálogo inicial sin modificar productos que ya existan.
+-- Corrige la unidad provisional de los productos existentes.
+UPDATE dbo.inventario
+SET unidad = N'pieza'
+WHERE LOWER(LTRIM(RTRIM(unidad))) = N'pendiente';
+GO
+
 DECLARE @catalogo TABLE (
     nombre nvarchar(100) NOT NULL,
     precioVenta decimal(12,2) NOT NULL
