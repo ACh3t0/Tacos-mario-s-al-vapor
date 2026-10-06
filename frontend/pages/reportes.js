@@ -7,6 +7,21 @@ const moneda = valor => new Intl.NumberFormat("es-MX", { style: "currency", curr
 const numero = valor => new Intl.NumberFormat("es-MX", { maximumFractionDigits: 3 }).format(valor);
 const colores = ["#ad7415", "#277e78", "#ca6752", "#7866aa", "#508bb1", "#859344", "#b84f80"];
 let ventas = [];
+let periodoMostrado = "";
+let detallesCerrados = [];
+window.addEventListener("beforeprint", () => {
+    $("periodo-pdf").textContent = periodoMostrado;
+    $("fecha-pdf").textContent = "Generado: " + new Intl.DateTimeFormat("es-MX", {
+        dateStyle: "long", timeStyle: "short"
+    }).format(new Date());
+    detallesCerrados = [...$("historial").querySelectorAll("details:not([open])")];
+    detallesCerrados.forEach(detalle => { detalle.open = true; });
+});
+window.addEventListener("afterprint", () => {
+    detallesCerrados.forEach(detalle => { detalle.open = false; });
+    detallesCerrados = [];
+});
+$("exportar-pdf").addEventListener("click", () => window.print());
 function nodo(tag, texto, clase) {
     const elemento = document.createElement(tag);
     if (texto !== undefined) elemento.textContent = texto;
@@ -18,6 +33,8 @@ function mostrar() {
     $("hasta").setCustomValidity(desde && hasta && desde > hasta ? "La fecha final debe ser igual o posterior a la inicial." : "");
     if (!$("filtros").reportValidity()) return;
     const resumen = resumirVentas(ventas, desde, hasta);
+    periodoMostrado = desde && hasta ? `Período: del ${desde} al ${hasta}`
+        : desde ? `Período: desde ${desde}` : hasta ? `Período: hasta ${hasta}` : "Período: todo el historial";
     $("ingresos").textContent = moneda(resumen.total);
     $("cantidad-ventas").textContent = numero(resumen.historial.length);
     $("promedio").textContent = moneda(resumen.historial.length ? resumen.total / resumen.historial.length : 0);
@@ -90,6 +107,7 @@ function mostrar() {
     }
 }
 async function cargar() {
+    $("exportar-pdf").disabled = true;
     $("actualizar").disabled = true;
     $("aplicar").disabled = true;
     $("estado").textContent = "Cargando ventas…";
@@ -108,6 +126,7 @@ async function cargar() {
     } finally {
         $("actualizar").disabled = false;
         $("aplicar").disabled = !cargado;
+        $("exportar-pdf").disabled = !cargado;
     }
 }
 $("filtros").addEventListener("submit", event => { event.preventDefault(); mostrar(); });

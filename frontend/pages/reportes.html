@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -21,8 +21,12 @@
     <main>
         <header class="encabezado">
             <div><h1>Reportes de ventas</h1></div>
-            <div class="exportar"><button type="button" disabled aria-describedby="pdf-nota">Descargar PDF</button><small id="pdf-nota">Próximamente</small></div>
+            <div class="exportar"><button id="exportar-pdf" type="button" disabled aria-describedby="pdf-nota">Guardar como PDF</button><small id="pdf-nota">En la ventana de impresión, elige Guardar como PDF.</small></div>
         </header>
+        <section class="encabezado-pdf" aria-label="Datos del reporte">
+            <img src="../img/Logotipo de Tacos Mario’s al Vapor.png" alt="Logo de la empresa">
+            <div><h2>Tacos Mario’s al Vapor</h2><p>Reporte de ventas · Importes en MXN</p><p id="periodo-pdf"></p><p id="fecha-pdf"></p></div>
+        </section>
         <form id="filtros" class="filtros">
             <label>Desde<input id="desde" type="date"></label>
             <label>Hasta<input id="hasta" type="date"></label>
