@@ -12,17 +12,20 @@ body {
 /* Menú lateral izquierdo */
 .sidebar {
     background-color: rgb(165, 128, 26);
-    width: 220px;
-    min-width: 220px;
+    width: 200px;
+    max-width: 100%;
+    flex-shrink: 0;
     min-height: 100vh;
     padding: 20px 16px;
 }
 
 .logo {
     display: block;
-    margin: 0 auto 20px auto;
+    margin: 0 auto;
     width: 100px;
-    height: auto;
+    max-width: 100%;
+    height: 50px;
+    object-fit: contain;
 }
 
 .sidebar ul {
@@ -30,33 +33,46 @@ body {
     flex-direction: column;
     gap: 12px;
     list-style: none;
-    margin: 0;
+    margin: 30px 0 0;
     padding: 0;
+}
+
+.sidebar li {
+    width: 100%;
 }
 
 .sidebar a {
     display: block;
     width: 100%;
-    padding: 12px;
+    padding: 16px 12px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 8px;
     background-color: aliceblue;
     color: #29220f;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 600;
     text-align: center;
     text-decoration: none;
+    overflow-wrap: anywhere;
+    transition: background-color 150ms ease;
 }
 
 .sidebar a:hover {
     background-color: #ffe5a3;
 }
 
+.sidebar a:focus-visible {
+    outline: 3px solid #29220f;
+    outline-offset: 3px;
+}
 /* Área de contenido de ventas */
 main {
-    flex: 1;
+   flex: 1;
     padding: 30px;
     background-color: #ffffff;
     min-height: 100vh;
+    max-width: 1200px; /* Nuevo */
+    margin: 0 auto;
 }
 
 h1 {
@@ -67,7 +83,9 @@ h1 {
 .contenedor-venta {
     display: flex;
     gap: 30px;
-    margin-top: 20px;
+    margin: 20px auto 0 auto; /* Agrega 'auto' a los lados para centrar */
+    max-width: 1200px; /* Aumentado para que no se vea tan apretado */
+    width: 100%;
 }
 
 .panel-agregar, .panel-orden {
@@ -75,6 +93,8 @@ h1 {
     border: 1px solid #e0e0e0;
     padding: 20px;
     border-radius: 8px;
+    flex: 2; /* Tomará el doble de espacio que el panel de agregar producto */
+    overflow-x: auto;
 }
 
 .panel-agregar {

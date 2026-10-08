@@ -1,8 +1,8 @@
-IF DB_ID(N'Tacos Mario´s') IS NULL
-    CREATE DATABASE [Tacos Mario´s];
+IF DB_ID(N'Tacos Marios') IS NULL
+    CREATE DATABASE [Tacos Marios];
 GO
 
-USE [Tacos Mario´s];
+USE [Tacos Marios];
 GO
 
 IF OBJECT_ID(N'dbo.users', N'U') IS NULL

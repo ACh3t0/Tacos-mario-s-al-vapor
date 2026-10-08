@@ -168,3 +168,11 @@ tr.inactivo td {
         padding: 16px;
     }
 }
+button.btn-restar {
+    background-color: #c0392b;
+    margin-left: 5px;
+}
+
+button.btn-restar:hover {
+    background-color: #962d22;
+}

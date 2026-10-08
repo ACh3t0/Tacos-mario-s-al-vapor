@@ -29,13 +29,26 @@
         <section class="contenedor-venta">
             <div class="panel-agregar">
                 <h3>Agregar Producto</h3>
+                
                 <label for="select-producto">Producto:</label>
                 <select id="select-producto">
                     <option value="">Cargando productos...</option>
                 </select>
 
-                <label for="input-cantidad">Cantidad:</label>
-                <input type="number" id="input-cantidad" min="1" step="1" value="1">
+                <!-- NUEVO PANEL: Desglose de Orden Mixta (Oculto por defecto) -->
+                <div id="panel-orden-mixta" style="display: none;">
+                    <p class="instruccion-mixta">Arma tu orden (selecciona 5 tacos):</p>
+                    <div id="sabores-mixta" class="lista-sabores">
+                        <!-- Los inputs con los sabores disponibles se inyectarán aquí con JavaScript -->
+                    </div>
+                    <p id="contador-mixta" class="contador-tacos">Llevas: <strong>0 / 5</strong></p>
+                </div>
+
+                <!-- Contenedor para ocultar la cantidad cuando es Orden Mixta -->
+                <div id="contenedor-cantidad">
+                    <label for="input-cantidad">Cantidad:</label>
+                    <input type="number" id="input-cantidad" min="1" step="1" value="1">
+                </div>
 
                 <button id="btn-agregar" type="button">Agregar a la orden</button>
             </div>

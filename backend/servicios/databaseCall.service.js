@@ -2,7 +2,7 @@
 
 // Usa la cuenta de Windows que ejecuta Node.js, sin guardar contraseñas.
 const dbConfig = {
-    connectionString: 'Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database={Tacos Mario´s};Trusted_Connection=yes;Encrypt=yes;TrustServerCertificate=yes;',
+    connectionString: 'Driver={ODBC Driver 18 for SQL Server};Server=localhost;Database={Tacos Marios};Trusted_Connection=yes;Encrypt=yes;TrustServerCertificate=yes;',
     connectionTimeout: 15000,
     requestTimeout: 15000,
     pool: { max: 10, min: 0, idleTimeoutMillis: 30000 }
