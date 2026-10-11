@@ -7,7 +7,7 @@ const pool = new sql.ConnectionPool({
     connectionString:
         "Driver={ODBC Driver 18 for SQL Server};" +
         `Server=${process.env.DB_SERVER || "localhost"};` +
-        "Database={Tacos Marios};" +
+        "Database={Tacos Mario´s};" +
         "Trusted_Connection=yes;" +
         "Encrypt=yes;" +
         "TrustServerCertificate=yes;",
