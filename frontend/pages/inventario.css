@@ -201,3 +201,37 @@ button.btn-restar:hover {
 .btn-atajo:hover {
     background-color: #f5d176;
 }
+
+.paso-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-paso {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 24px;
+    line-height: 1;
+    border-radius: 8px;
+}
+
+.paso-cantidad input {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Oculta las flechitas pequeñas del navegador */
+.paso-cantidad input[type="number"]::-webkit-inner-spin-button,
+.paso-cantidad input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.paso-cantidad input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
