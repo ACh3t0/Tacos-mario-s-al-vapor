@@ -45,6 +45,9 @@ Cada producto debe aparecer una sola vez por venta. El servidor utiliza el usuar
 de la sesión y los precios del inventario; calcula los subtotales en SQL.
 Si falta stock o un producto está inactivo, revierte toda la venta y devuelve 409.
 No se incluyen eliminación o edición de ventas para conservar su historial.
+La venta acepta `notas` (texto opcional, hasta 255 caracteres, por ejemplo «sin cebolla»); se guarda
+en `ventas.notas` y se devuelve en las ventas y en `GET /api/pedidos`. Las bases ya creadas
+reciben la columna al volver a ejecutar `crear-base-de-datos.sql`.
 
 Pruebas de lógica sin conexión SQL: `node --test scripts/test-comercial.js`.
 Las páginas todavía deben llamar a estos servicios para mostrar los datos.

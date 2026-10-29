@@ -99,6 +99,7 @@ th {
 
 .acciones-stock {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     min-width: 230px;
@@ -175,4 +176,28 @@ button.btn-restar {
 
 button.btn-restar:hover {
     background-color: #962d22;
+}
+
+
+.cantidades-rapidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.btn-atajo {
+    min-width: 36px;
+    padding: 4px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    background-color: #ffe5a3;
+    color: #29220f;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-atajo:hover {
+    background-color: #f5d176;
 }

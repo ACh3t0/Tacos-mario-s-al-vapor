@@ -7,6 +7,7 @@ const btnAgregar = document.getElementById("btn-agregar");
 const listaOrden = document.getElementById("lista-orden");
 const totalVenta = document.getElementById("total-venta");
 const selectPago = document.getElementById("select-pago");
+const inputNota = document.getElementById("input-nota");
 const btnCobrar = document.getElementById("btn-cobrar");
 
 // Elementos del nuevo panel de Orden Mixta
@@ -247,6 +248,7 @@ btnCobrar.addEventListener("click", async () => {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 metodoPago: selectPago.value, 
+                notas: inputNota.value.trim(),
                 detalles: ordenActual.map(item => ({ productoId: item.productoId, cantidad: item.cantidad })) 
             })
         });
@@ -255,6 +257,7 @@ btnCobrar.addEventListener("click", async () => {
         if (respuesta.ok) {
             alert("¡Venta registrada con éxito!");
             ordenActual = [];
+            inputNota.value = "";
             actualizarTabla();
             await cargarInventario(); // Recargar stock actualizado
         } else {

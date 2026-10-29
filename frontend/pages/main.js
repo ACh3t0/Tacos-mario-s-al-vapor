@@ -52,6 +52,7 @@ function dibujarTabla(cuerpo, pedidos, permitirCompletar) {
             ));
         }
         celdaDetalles.append(lista);
+        if (pedido.notas) celdaDetalles.append(nodo("p", `Nota: ${pedido.notas}`, "nota-pedido"));
         fila.append(celdaDetalles, nodo("td", moneda(pedido.total)), nodo("td", pedido.metodoPago));
 
         if (permitirCompletar) {

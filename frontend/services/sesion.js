@@ -37,9 +37,10 @@ function prepararMenu(sesion) {
     estilo.textContent = estilos;
     document.head.append(estilo);
 
-    // Solo Admin y Desarrollador ven el enlace a Usuarios.
+        // Solo Admin y Desarrollador ven los enlaces a Usuarios y Reportes.
     if (![ADMIN, DESARROLLADOR].includes(sesion.accountType)) {
         menu.querySelector('a[href$="usuarios.html"]')?.closest("li")?.remove();
+        menu.querySelector('a[href$="reportes.html"]')?.closest("li")?.remove();
     }
 
     const info = document.createElement("p");

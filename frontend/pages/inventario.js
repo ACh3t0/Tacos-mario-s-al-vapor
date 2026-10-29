@@ -2,6 +2,7 @@ import { protegerPagina } from "../services/sesion.js";
 import { listarInventario, agregarExistencia, obtenerProducto, editarProducto } from "../services/inventario.service.js";
 
 const $ = id => document.getElementById(id);
+const CANTIDADES_RAPIDAS = [1, 5, 10, 20, 50];
 const ADMIN = 2;
 const DESARROLLADOR = 3;
 let puedeGestionar = false;
@@ -86,7 +87,23 @@ function dibujarTabla(productos) {
             btnRestar.textContent = "Retirar";
             btnRestar.className = "btn-restar";
 
-            formulario.append(cantidad, btnAgregar, btnRestar);
+            // Atajos: rellenan la cantidad; también se puede escribir un número manualmente.
+            const atajos = document.createElement("div");
+            atajos.className = "cantidades-rapidas";
+            for (const valor of CANTIDADES_RAPIDAS) {
+                const atajo = document.createElement("button");
+                atajo.type = "button";
+                atajo.className = "btn-atajo";
+                atajo.textContent = valor;
+                atajo.setAttribute("aria-label", `Usar ${valor} ${producto.unidad} de ${producto.nombre}`);
+                atajo.addEventListener("click", () => {
+                    cantidad.value = valor;
+                    cantidad.focus();
+                });
+                atajos.appendChild(atajo);
+            }
+
+            formulario.append(atajos, cantidad, btnAgregar, btnRestar);
 
             // ACCIÓN: AGREGAR STOCK
             formulario.addEventListener("submit", async evento => {
