@@ -165,3 +165,13 @@ button:hover {
     width: auto;
     padding: 10px 24px;
 }
+
+
+#input-nota {
+    display: block;
+    width: 100%;
+    margin: 4px 0 12px;
+    padding: 8px;
+    font-family: inherit;
+    resize: vertical;
+}

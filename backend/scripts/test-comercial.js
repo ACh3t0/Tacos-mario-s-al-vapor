@@ -21,6 +21,7 @@ function preparar() {
                     if (texto.includes("INSERT INTO dbo.ventas")) {
                         estado.ventas++;
                         estado.usuario = valores.userId;
+                        estado.notas = valores.notas;
                         return { recordset: [{ ventaId: 1 }] };
                     }
                     if (texto.includes("UPDATE dbo.inventario")) {
@@ -230,4 +231,34 @@ test("completa únicamente pedidos activos y valida su identificador", async () 
     const invalido = prepararPedidos();
     await assert.rejects(invalido.completarPedido(0), error => error.status === 400);
     assert.equal(invalido.estado.consultas, 0);
+});
+
+test("guarda la nota de la orden recortada y la deja en null cuando viene vacía", async () => {
+    const detalles = [{ productoId: 1, cantidad: 1 }];
+    const conNota = preparar();
+    await conNota.registrarVenta(7, { metodoPago: "Efectivo", detalles, notas: "  sin cebolla  " });
+    assert.equal(conNota.estado.notas, "sin cebolla");
+
+    const sinNota = preparar();
+    await sinNota.registrarVenta(7, { metodoPago: "Efectivo", detalles, notas: "   " });
+    assert.equal(sinNota.estado.notas, null);
+
+    const omitida = preparar();
+    await omitida.registrarVenta(7, { metodoPago: "Efectivo", detalles });
+    assert.equal(omitida.estado.notas, null);
+});
+
+test("rechaza notas que no son texto o que superan 255 caracteres", async () => {
+    const detalles = [{ productoId: 1, cantidad: 1 }];
+    for (const notas of [123, {}, "a".repeat(256)]) {
+        const { estado, registrarVenta } = preparar();
+        await assert.rejects(
+            registrarVenta(7, { metodoPago: "Efectivo", detalles, notas }),
+            { status: 400 }
+        );
+        assert.equal(estado.ventas, 0);
+    }
+    const limite = preparar();
+    await limite.registrarVenta(7, { metodoPago: "Efectivo", detalles, notas: "a".repeat(255) });
+    assert.equal(limite.estado.notas.length, 255);
 });

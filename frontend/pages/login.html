@@ -15,6 +15,7 @@
 
         <div class="formsCard">
 
+<p id="mensajeLogin" role="alert" style="color:#fff;background:#a52a2a;padding:6px;border-radius:6px;" hidden></p>
 
             <form id="loginForm">
                 
@@ -25,12 +26,11 @@
                 <input type="password" id="password" required>
 
                 <label class="accountType">Tipo de cuenta:</label>
-                <select class="foldingMenu">
-
-                    <option value="employee">Empleado</option>
-                    <option value="admin">Admin</option>
-                    <option value="master">Desarrollador</option>
-                </select>
+                <select class="foldingMenu" id="accountType">
+    <option value="1">Empleado</option>
+    <option value="2">Admin</option>
+    <option value="3">Desarrollador</option>
+</select>
             </div>
         <div class="buttonContainer">
             </form>

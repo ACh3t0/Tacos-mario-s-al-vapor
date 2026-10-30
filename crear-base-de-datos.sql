@@ -1,8 +1,8 @@
-IF DB_ID(N'Tacos Marios') IS NULL
-    CREATE DATABASE [Tacos Marios];
+IF DB_ID(N'Tacos Mario´s') IS NULL
+    CREATE DATABASE [Tacos Mario´s];
 GO
 
-USE [Tacos Marios];
+USE [Tacos Mario´s];
 GO
 
 IF OBJECT_ID(N'dbo.users', N'U') IS NULL
@@ -85,6 +85,7 @@ BEGIN
         userId int NOT NULL,
         metodoPago nvarchar(20) NOT NULL,
         estadoPedido nvarchar(12) NOT NULL CONSTRAINT DF_ventas_estadoPedido DEFAULT N'Activo',
+        notas nvarchar(255) NULL,
         CONSTRAINT FK_ventas_users FOREIGN KEY (userId) REFERENCES dbo.users(userId),
         CONSTRAINT CK_ventas_metodoPago CHECK (metodoPago IN (N'Efectivo', N'Tarjeta', N'Transferencia')),
         CONSTRAINT CK_ventas_estadoPedido CHECK (estadoPedido IN (N'Activo', N'Completado'))
@@ -128,6 +129,11 @@ BEGIN
     ADD CONSTRAINT CK_ventas_estadoPedido
         CHECK (estadoPedido IN (N'Activo', N'Completado'));
 END
+GO
+
+-- Nota opcional de la orden (por ejemplo: "sin cebolla").
+IF COL_LENGTH(N'dbo.ventas', N'notas') IS NULL
+    EXEC sys.sp_executesql N'ALTER TABLE dbo.ventas ADD notas nvarchar(255) NULL';
 GO
 
 -- Cada fila representa un producto vendido. Conserva el precio de esa venta.

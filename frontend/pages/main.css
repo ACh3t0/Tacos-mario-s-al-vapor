@@ -175,3 +175,10 @@ button:disabled {
         padding: 16px;
     }
 }
+
+
+.nota-pedido {
+    margin: 6px 0 0;
+    font-style: italic;
+    color: #8a5a00;
+}

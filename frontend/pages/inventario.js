@@ -2,6 +2,7 @@ import { protegerPagina } from "../services/sesion.js";
 import { listarInventario, agregarExistencia, obtenerProducto, editarProducto } from "../services/inventario.service.js";
 
 const $ = id => document.getElementById(id);
+const CANTIDADES_RAPIDAS = [1, 5, 10, 20, 50];
 const ADMIN = 2;
 const DESARROLLADOR = 3;
 let puedeGestionar = false;
@@ -71,8 +72,8 @@ function dibujarTabla(productos) {
 
             const cantidad = document.createElement("input");
             cantidad.type = "number";
-            cantidad.min = "0.001";
-            cantidad.step = "0.001";
+            cantidad.min = "any";
+            cantidad.step = "any";
             cantidad.required = true;
             cantidad.placeholder = "Cant.";
             cantidad.setAttribute("aria-label", `Unidades a modificar de ${producto.nombre}`);
@@ -86,7 +87,54 @@ function dibujarTabla(productos) {
             btnRestar.textContent = "Retirar";
             btnRestar.className = "btn-restar";
 
-            formulario.append(cantidad, btnAgregar, btnRestar);
+            // Atajos: rellenan la cantidad; también se puede escribir un número manualmente.
+            const atajos = document.createElement("div");
+            atajos.className = "cantidades-rapidas";
+            for (const valor of CANTIDADES_RAPIDAS) {
+                const atajo = document.createElement("button");
+                atajo.type = "button";
+                atajo.className = "btn-atajo";
+               atajo.textContent = `+${valor}`;
+                atajo.setAttribute("aria-label", `Sumar ${valor} ${producto.unidad} de ${producto.nombre}`);
+                atajo.addEventListener("click", () => {
+                 const actual = Number(cantidad.value) || 0;
+                 cantidad.value = Math.round((actual + valor) * 1000) / 1000;
+                });
+                atajos.appendChild(atajo);
+            }
+
+            const limpiar = document.createElement("button");
+            limpiar.type = "button";
+            limpiar.className = "btn-atajo";
+            limpiar.textContent = "✕";
+            limpiar.setAttribute("aria-label", "Borrar cantidad");
+            limpiar.addEventListener("click", () => { cantidad.value = ""; });
+            atajos.appendChild(limpiar);
+
+                        // Botones − y + grandes, de uno en uno (reemplazan las flechitas del navegador).
+            const cambiarCantidad = delta => {
+                const nuevo = Math.round(((Number(cantidad.value) || 0) + delta) * 1000) / 1000;
+                cantidad.value = nuevo > 0 ? nuevo : "";
+            };
+            const btnMenos = document.createElement("button");
+            btnMenos.type = "button";
+            btnMenos.className = "btn-paso";
+            btnMenos.textContent = "−";
+            btnMenos.setAttribute("aria-label", `Restar 1 a la cantidad de ${producto.nombre}`);
+            btnMenos.addEventListener("click", () => cambiarCantidad(-1));
+
+            const btnMas = document.createElement("button");
+            btnMas.type = "button";
+            btnMas.className = "btn-paso";
+            btnMas.textContent = "+";
+            btnMas.setAttribute("aria-label", `Sumar 1 a la cantidad de ${producto.nombre}`);
+            btnMas.addEventListener("click", () => cambiarCantidad(1));
+
+            const paso = document.createElement("div");
+            paso.className = "paso-cantidad";
+            paso.append(btnMenos, cantidad, btnMas);
+
+            formulario.append(atajos, paso, btnAgregar, btnRestar);
 
             // ACCIÓN: AGREGAR STOCK
             formulario.addEventListener("submit", async evento => {

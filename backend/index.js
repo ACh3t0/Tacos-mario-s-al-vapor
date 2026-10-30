@@ -84,7 +84,7 @@ app.post("/api/register", async (req, res) => {
 });
 
 app.post("/api/login", async (req, res) => {
-    const { usuario, password } = req.body ?? {};
+   const { usuario, password, accountType } = req.body ?? {};
 
     if (
         typeof usuario !== "string" ||
@@ -112,6 +112,11 @@ app.post("/api/login", async (req, res) => {
         if (!cuenta || !(await verifyPassword(password, cuenta.password)) || !cuenta.isActive) {
             return res.status(401).json({ mensaje: "Usuario o contraseña incorrectos." });
         }
+
+        // El tipo elegido debe coincidir con el de la cuenta.
+if (Number(accountType) !== cuenta.accountType) {
+    return res.status(401).json({ mensaje: "El tipo de cuenta no coincide con el usuario." });
+}
 
         // regenerate crea una sesión nueva al iniciar sesión (más seguro).
         req.session.regenerate((err) => {

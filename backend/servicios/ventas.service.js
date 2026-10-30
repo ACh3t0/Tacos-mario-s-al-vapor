@@ -1,7 +1,7 @@
 const { sql, getConnection } = require("./databaseLogin.service");
 const { exigir, idValido, decimalValido } = require("./validacionComercial");
 
-const resumen = `SELECT v.ventaId, v.fecha, v.userId, u.userName, v.metodoPago, v.estadoPedido,
+const resumen = `SELECT v.ventaId, v.fecha, v.userId, u.userName, v.metodoPago, v.estadoPedido, v.notas,
     COALESCE((SELECT SUM(d.subtotal) FROM dbo.detalleVenta d WHERE d.ventaId=v.ventaId), 0) AS total
     FROM dbo.ventas v INNER JOIN dbo.users u ON u.userId=v.userId`;
 
@@ -17,7 +17,7 @@ async function listarPedidos(estadoPedido) {
         .input("estadoPedido", sql.NVarChar(12), estadoPedido)
         .query(`
             SELECT v.ventaId, CONVERT(varchar(19), v.fecha, 126) AS fecha,
-                v.userId, u.userName, v.metodoPago, v.estadoPedido,
+                v.userId, u.userName, v.metodoPago, v.estadoPedido, v.notas,
                 COALESCE((SELECT SUM(dv.subtotal) FROM dbo.detalleVenta dv
                     WHERE dv.ventaId=v.ventaId), 0) AS total,
                 d.detalleVentaId, d.productoId, i.nombre, d.cantidad,
@@ -40,6 +40,7 @@ async function listarPedidos(estadoPedido) {
                 userName: fila.userName,
                 metodoPago: fila.metodoPago,
                 estadoPedido: fila.estadoPedido,
+                notas: fila.notas,
                 total: fila.total,
                 detalles: []
             });
@@ -91,6 +92,10 @@ async function obtenerVenta(ventaId) {
 async function registrarVenta(userId, datos) {
     userId = Number(userId) || 1;
     const { metodoPago, detalles } = datos ?? {};
+    exigir(datos?.notas === undefined || datos.notas === null || typeof datos.notas === "string",
+        "La nota debe ser texto.");
+    const notas = (datos?.notas ?? "").trim() || null;
+    exigir(notas === null || notas.length <= 255, "La nota debe tener hasta 255 caracteres.");
     exigir(["Efectivo", "Tarjeta", "Transferencia"].includes(metodoPago), "Método de pago no válido.");
     exigir(Array.isArray(detalles) && detalles.length > 0 && detalles.length <= 100,
         "La venta debe contener entre 1 y 100 productos.");
@@ -109,8 +114,9 @@ async function registrarVenta(userId, datos) {
     try {
         const cabecera = await transaccion.request()
             .input("userId", sql.Int, userId).input("metodoPago", sql.NVarChar(20), metodoPago)
-            .query(`INSERT INTO dbo.ventas (userId, metodoPago, estadoPedido)
-                OUTPUT INSERTED.ventaId VALUES (@userId, @metodoPago, N'Activo')`);
+            .input("notas", sql.NVarChar(255), notas)
+            .query(`INSERT INTO dbo.ventas (userId, metodoPago, estadoPedido, notas)
+                OUTPUT INSERTED.ventaId VALUES (@userId, @metodoPago, N'Activo', @notas)`);
         const ventaId = cabecera.recordset[0].ventaId;
         // Orden estable de bloqueos para ventas simultáneas con varios productos.
         for (const { productoId, cantidad } of [...detalles].sort((a, b) => a.productoId - b.productoId)) {

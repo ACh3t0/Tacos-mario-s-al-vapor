@@ -99,6 +99,7 @@ th {
 
 .acciones-stock {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
     gap: 8px;
     min-width: 230px;
@@ -175,4 +176,62 @@ button.btn-restar {
 
 button.btn-restar:hover {
     background-color: #962d22;
+}
+
+
+.cantidades-rapidas {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 6px;
+    width: 100%;
+}
+
+.btn-atajo {
+    min-width: 36px;
+    padding: 4px 8px;
+    border: 1px solid rgba(0, 0, 0, 0.25);
+    border-radius: 6px;
+    background-color: #ffe5a3;
+    color: #29220f;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-atajo:hover {
+    background-color: #f5d176;
+}
+
+.paso-cantidad {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-paso {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    font-size: 24px;
+    line-height: 1;
+    border-radius: 8px;
+}
+
+.paso-cantidad input {
+    width: 80px;
+    height: 40px;
+    text-align: center;
+    font-size: 16px;
+}
+
+/* Oculta las flechitas pequeñas del navegador */
+.paso-cantidad input[type="number"]::-webkit-inner-spin-button,
+.paso-cantidad input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.paso-cantidad input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
 }
